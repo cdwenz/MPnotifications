@@ -6,16 +6,23 @@ const PORT = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 
+app.get('/', (req, res) => {
+    console.log("getter de MPNotifications", req.body)
+    res.json(req.body)
+})
+
 app.post('/notification', (req, res) => {
     const data = req.body;
+    const query = req.query
     console.log('Datos recibidos:', data);
+    console.log('Querys recibidos:', query);
 
     // Guarda las notificaciones en un archivo (opcional)
-    fs.appendFile('notifications.log', JSON.stringify(data) + '\n', (err) => {
-        if (err) {
-            console.error('Error al guardar la notificación:', err);
-        }
-    });
+    // fs.appendFile('notifications.log', JSON.stringify(data) + '\n', (err) => {
+    //     if (err) {
+    //         console.error('Error al guardar la notificación:', err);
+    //     }
+    // });
 
     // Procesa los datos según tus necesidades
     if (data && data.type === 'payment') {
