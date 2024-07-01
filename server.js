@@ -5,6 +5,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const axios = require('axios');
 const nodemailer = require('nodemailer');
+require('dotenv').config();
 
 app.use(bodyParser.json());
 
