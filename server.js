@@ -3,7 +3,8 @@ const bodyParser = require('body-parser');
 const fs = require('fs');
 const app = express();
 const PORT = process.env.PORT || 3000;
-const axios = require('axios')
+const axios = require('axios');
+const nodemailer = require('nodemailer');
 
 app.use(bodyParser.json());
 
@@ -58,6 +59,32 @@ app.post("/create_order", async (req, res) => {
       console.error(error);
       res.status(500).send("Error creating order");
     }
+  });
+
+  app.post('/sendConfirm', (req, res) => {
+    const { enableChunk } = req.body;
+  
+    const transporter = nodemailer.createTransport({
+      service: 'gmail', // Puedes usar cualquier servicio de correo compatible
+      auth: {
+        user: process.env.NODE_ENV_EMAIL_USER,
+        pass: process.env.NODE_ENV_EMAIL_PASS
+      }
+    });
+  
+    const mailOptions = {
+      from: process.env.NODE_ENV_EMAIL_USER,
+      to: process.env.NODE_ENV_EMAIL_USER,
+      subject: "CHECK POINT DEV",
+      text: enableChunk
+    };
+  
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        return res.status(500).send(error.toString());
+      }
+      res.status(200).send('Email sent: ' + info.response);
+    });
   });
 
 app.listen(PORT, () => {
